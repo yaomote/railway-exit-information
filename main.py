@@ -62,14 +62,6 @@ def handle_follow(event):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if event.message.text == "渋谷駅":
-        # スクレイピング準備
-        options = Options()             # ブラウザオプション格納
-        options.set_headless(True)      # Headlessモードを有効にする（コメントアウトするとブラウザが実際に立ち上がる）
-        driver = webdriver.Chrome(chrome_options=options, executable_path='/app/.chromedriver/bin/chromedriver')        # ブラウザを起動
-        driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # ブラウザでアクセスする
-        html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
-        soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
-
         # 駅名-路線名と駅ページのurlをリストstationInfoへ格納
         stationName_tag = soup.select('ul.stationname > li > a')
         for sn_tag in stationName_tag:
@@ -87,7 +79,13 @@ def handle_message(event):
 
 
 if __name__ == "__main__":
-#    app.run()
-    print("test5********")
+    # スクレイピング準備
+    options = Options()             # ブラウザオプション格納
+    options.set_headless(True)      # Headlessモードを有効にする（コメントアウトするとブラウザが実際に立ち上がる）
+    driver = webdriver.Chrome(chrome_options=options, executable_path='/app/.chromedriver/bin/chromedriver')        # ブラウザを起動
+    driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # ブラウザでアクセスする
+    html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
+    soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
+
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
