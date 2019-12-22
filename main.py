@@ -71,9 +71,9 @@ def handle_message(event):
             stationName = sn_tag.string
             stationInfo[stationName] = sn_tag.get('href')
 
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=stationInfo['渋谷-山手線']))
+        for si_key in stationInfo:
+            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=stationInfo[si_key]))
+
     else:
         print("**********失敗***********")
         line_bot_api.reply_message(
