@@ -72,6 +72,7 @@ def handle_message(event):
         html = driver.page_source.encode('utf-8')
         # htmlをBeautifulSoupで扱う
         soup = BeautifulSoup(html, "html.parser")
+        print(soup)
 
         line_bot_api.reply_message(
             event.reply_token,
