@@ -17,6 +17,7 @@ handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 def callback():
     # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
+    print("test1********")
     print(signature)
 
     # get request body as text
@@ -26,14 +27,17 @@ def callback():
     # handle webhook body
     try:
         handler.handle(body, signature)
+        print("test2********")
     except InvalidSignatureError:
         abort(400)
+        print("test3********")
 
     return 'OK'
 
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    print("test4********")
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text))
@@ -41,5 +45,6 @@ def handle_message(event):
 
 if __name__ == "__main__":
 #    app.run()
+    print("test5********")
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
