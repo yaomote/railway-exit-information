@@ -63,7 +63,7 @@ def handle_message(event):
     # 駅情報格納用
     stationInfo = {}    # {'駅名-路線':'ページurl'}
     text = ""           # test用
-    
+
     if event.message.text == "渋谷駅":
         driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # ブラウザでアクセスする
         html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
@@ -77,7 +77,7 @@ def handle_message(event):
         for si_key in stationInfo:
             text = text + stationInfo[si_key]
 
-        line_bot_api.reply_message(event.reply_token,TextSendMessage(text=stationInfo[si_key]))
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text=text))
 
     else:
         print("**********失敗***********")
