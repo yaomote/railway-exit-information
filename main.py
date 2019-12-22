@@ -60,6 +60,10 @@ def handle_follow(event):
 # メッセージ
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    # 駅情報格納用
+    stationInfo = {}    # {'駅名-路線':'ページurl'}
+    text = ""           # test用
+    
     if event.message.text == "渋谷駅":
         driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # ブラウザでアクセスする
         html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
@@ -83,10 +87,6 @@ def handle_message(event):
 
 
 if __name__ == "__main__":
-    # 駅情報格納用
-    stationInfo = {}    # {'駅名-路線':'ページurl'}
-    text = ""           # test用
-
     # スクレイピング準備
     options = Options()             # ブラウザオプション格納
     options.set_headless(True)      # Headlessモードを有効にする（コメントアウトするとブラウザが実際に立ち上がる）
