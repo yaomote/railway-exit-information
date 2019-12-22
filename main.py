@@ -70,15 +70,15 @@ def handle_message(event):
         html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
         soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
 
-        # 出口情報整理
-        stationName_tag = soup.find_all('ul.stationname > li > a')    # 例：<a href="/station/train/kantou/山手線/山手線-130265/">渋谷-山手線</a>
-        print("******************stationname")
-        print(stationName_tag)
-        stationName_href = stationName_tag.get('href')                  # /station/train/kantou/山手線/山手線-130265/
+        # 駅名-路線名と駅ページのurlをリストstationInfoへ格納
+        stationName_tag = soup.select('ul.stationname > li > a')
+        for sn_tag in stationName_tag:
+            stationName = sn_tag.string
+            stationInfo[stationName] = sn_tag.get('href')
 
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="成功"))
+            TextSendMessage(text=stationInfo['渋谷-山手線']))
     else:
         print("**********失敗***********")
         line_bot_api.reply_message(
