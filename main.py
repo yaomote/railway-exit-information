@@ -20,7 +20,8 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 # 駅情報格納用
-stationInfo = {}    #{'駅名-路線':'ページurl'}
+stationInfo = {}    # {'駅名-路線':'ページurl'}
+text = ""           # test用
 
 # 著名検証とhandleに定義されている関数呼び出し
 @app.route("/callback", methods=['POST'])
@@ -72,7 +73,9 @@ def handle_message(event):
             stationInfo[stationName] = sn_tag.get('href')
 
         for si_key in stationInfo:
-            line_bot_api.reply_message(event.reply_token,TextSendMessage(text=stationInfo[si_key]))
+            text = text + stationInfo[si_key]
+
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text=stationInfo[si_key]))
 
     else:
         print("**********失敗***********")

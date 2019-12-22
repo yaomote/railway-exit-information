@@ -8,6 +8,7 @@ import time                                                 # scrapingの時間�
 def main():
     # 駅情報格納用
     stationInfo = {}    #{'駅名-路線':'ページurl'}
+    text = ""
 
     # ブラウザのオプションを格納する変数をもらってくる。
     options = Options()
@@ -27,6 +28,11 @@ def main():
     for sn_tag in stationName_tag:
         stationName = sn_tag.string
         stationInfo[stationName] = sn_tag.get('href')
+
+    for si_key in stationInfo:
+        text = text + stationInfo[si_key]
+
+    print(text)
 
     return
 
