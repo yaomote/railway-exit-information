@@ -52,7 +52,7 @@ def handle_follow(event):
 # メッセージ
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if event.message.text == "渋谷駅"
+    if event.message.text == "渋谷駅":
         print("**********成功***********")
         line_bot_api.reply_message(
             event.reply_token,
