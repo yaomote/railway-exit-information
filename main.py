@@ -19,9 +19,7 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 # 各クライアントライブラリのインスタンス作成
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-# 駅情報格納用
-stationInfo = {}    # {'駅名-路線':'ページurl'}
-text = ""           # test用
+
 
 # 著名検証とhandleに定義されている関数呼び出し
 @app.route("/callback", methods=['POST'])
@@ -85,6 +83,10 @@ def handle_message(event):
 
 
 if __name__ == "__main__":
+    # 駅情報格納用
+    stationInfo = {}    # {'駅名-路線':'ページurl'}
+    text = ""           # test用
+
     # スクレイピング準備
     options = Options()             # ブラウザオプション格納
     options.set_headless(True)      # Headlessモードを有効にする（コメントアウトするとブラウザが実際に立ち上がる）
