@@ -19,6 +19,8 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 # 各クライアントライブラリのインスタンス作成
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
+# 駅情報格納用
+stationInfo = {}    #{'駅名-路線':'ページurl'}
 
 # 著名検証とhandleに定義されている関数呼び出し
 @app.route("/callback", methods=['POST'])
@@ -60,23 +62,23 @@ def handle_follow(event):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if event.message.text == "渋谷駅":
-        # ブラウザのオプションを格納する変数をもらってくる。
-        options = Options()
-        # Headlessモードを有効にする（コメントアウトするとブラウザが実際に立ち上がる）
-        options.set_headless(True)
-        # ブラウザを起動
-        driver = webdriver.Chrome(chrome_options=options, executable_path='/app/.chromedriver/bin/chromedriver')
-        # ブラウザでアクセスする
-        driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")
-        # HTMLを文字コードをUTF-8に変換してから取得します。
-        html = driver.page_source.encode('utf-8')
-        # htmlをBeautifulSoupで扱う
-        soup = BeautifulSoup(html, "html.parser")
-        print(soup)
+        # スクレイピング準備
+        options = Options()             # ブラウザオプション格納
+        options.set_headless(True)      # Headlessモードを有効にする（コメントアウトするとブラウザが実際に立ち上がる）
+        driver = webdriver.Chrome(chrome_options=options, executable_path='/app/.chromedriver/bin/chromedriver')        # ブラウザを起動
+        driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # ブラウザでアクセスする
+        html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
+        soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
+
+        # 出口情報整理
+        stationName_tag = soup.find_all('ul.stationname > li > a')    # 例：<a href="/station/train/kantou/山手線/山手線-130265/">渋谷-山手線</a>
+        print("******************stationname")
+        print(stationName)
+        stationName_href = stationName_tag.get('href')                  # /station/train/kantou/山手線/山手線-130265/
 
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=soup))
+            TextSendMessage(text="成功"))
     else:
         print("**********失敗***********")
         line_bot_api.reply_message(
