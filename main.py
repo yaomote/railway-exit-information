@@ -65,7 +65,7 @@ def handle_message(event):
         # Headlessモードを有効にする（コメントアウトするとブラウザが実際に立ち上がる）
         options.set_headless(True)
         # ブラウザを起動
-        driver = webdriver.Chrome(chrome_options=options, executable_path='C:\\chromedriver.exe')
+        driver = webdriver.Chrome(chrome_options=options, executable_path='app/chromedriver.exe')
         # ブラウザでアクセスする
         driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")
         # HTMLを文字コードをUTF-8に変換してから取得します。
