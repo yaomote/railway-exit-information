@@ -1,4 +1,4 @@
-#!c:\users\yamasho226\webservice2\myvenv\scripts\python.exe
+#!c:\users\yamasho226\webservice2[linebot]\myvenv\scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'future==0.18.2','console_scripts','pasteurize'
 __requires__ = 'future==0.18.2'
 import re

@@ -4,6 +4,13 @@ from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (FollowEvent, MessageEvent, TextMessage, TextSendMessage,)
 import os
 
+import urllib.request, urllib.error                         # urlアクセス
+import requests                                             # urlアクセス
+from bs4 import BeautifulSoup                               # web scraping用
+from selenium import webdriver                              # 動的ページに対するscraping用
+from selenium.webdriver.chrome.options import Options       # webdriverの設定用
+import time                                                 # scrapingの時間制御用
+
 app = Flask(__name__)
 
 # 環境変数取得
@@ -53,10 +60,22 @@ def handle_follow(event):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if event.message.text == "渋谷駅":
-        print("**********成功***********")
+        # ブラウザのオプションを格納する変数をもらってくる。
+        options = Options()
+        # Headlessモードを有効にする（コメントアウトするとブラウザが実際に立ち上がる）
+        options.set_headless(True)
+        # ブラウザを起動
+        driver = webdriver.Chrome(chrome_options=options, executable_path='C:\\chromedriver.exe')
+        # ブラウザでアクセスする
+        driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")
+        # HTMLを文字コードをUTF-8に変換してから取得します。
+        html = driver.page_source.encode('utf-8')
+        # htmlをBeautifulSoupで扱う
+        soup = BeautifulSoup(html, "html.parser")
+
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="成功"))
+            TextSendMessage(text=soup))
     else:
         print("**********失敗***********")
         line_bot_api.reply_message(

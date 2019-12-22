@@ -1,5 +1,5 @@
 @echo off
-set "VIRTUAL_ENV=C:\Users\yamasho226\webService2\myvenv"
+set "VIRTUAL_ENV=C:\Users\yamasho226\webService2[linebot]\myvenv"
 
 if not defined PROMPT (
     set "PROMPT=$P$G"
