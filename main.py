@@ -22,6 +22,10 @@ def callback():
 
     # get request body as text
     body = request.get_data(as_text=True)
+    print("test6********")
+    print(request)
+    print("test7********")
+    print(body)
     app.logger.info("Request body: " + body)
 
     # handle webhook body
@@ -38,6 +42,9 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     print("test4********")
+    print(event.reply_token)
+    print("test8********")
+    print(event.message.text)
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text))
