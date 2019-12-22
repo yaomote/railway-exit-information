@@ -73,7 +73,7 @@ def handle_message(event):
         # 出口情報整理
         stationName_tag = soup.find_all('ul.stationname > li > a')    # 例：<a href="/station/train/kantou/山手線/山手線-130265/">渋谷-山手線</a>
         print("******************stationname")
-        print(stationName)
+        print(stationName_tag)
         stationName_href = stationName_tag.get('href')                  # /station/train/kantou/山手線/山手線-130265/
 
         line_bot_api.reply_message(
