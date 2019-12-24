@@ -90,16 +90,12 @@ def handle_message(event):
                 else:
                     reUrlCnt += 1
                     reUrl = reUrl + exitUrlOne + '/'
-            print("******************************:")
-            print(reUrl)
             driver.get(f"https://transit.goo.ne.jp{reUrl}exit.html")        # 出口案内ページアクセス
             html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
             soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
 
             # 出口と施設をリストexitInfoへ格納
-            print(soup)
             facility_tag = soup.find_all(id='facility')
-            print(facility_tag)
             break
 
         line_bot_api.reply_message(event.reply_token,TextSendMessage(text="成功"))
