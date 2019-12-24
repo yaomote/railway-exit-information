@@ -96,7 +96,7 @@ def handle_message(event):
             facility_tag = soup.find_all(id='facility')
             break
 
-        line_bot_api.reply_message(event.reply_token,TextSendMessage(text="facility_tag"))
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text=facility_tag))
 
     else:
         print("**********失敗***********")
