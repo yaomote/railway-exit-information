@@ -63,6 +63,8 @@ def handle_message(event):
     # 駅情報格納用
     stationInfo = {}    # {'駅名-路線':'ページurl'}
     text = ""           # test用
+    reUrl = ""          # test用
+    reUrlCnt = 0        # test用
 
     if event.message.text == "渋谷駅":
         driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # 駅名検索ページアクセス
