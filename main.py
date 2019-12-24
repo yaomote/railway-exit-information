@@ -78,17 +78,27 @@ def handle_message(event):
 
         # 出口案内情報を取得
         for stationName in stationInfo:
-            driver.get(f"https://transit.goo.ne.jp{stationInfo[stationName]}exit.html")        # 出口案内ページアクセス
+            # urlの作り直し
+            exitUrl = stationInfo[stationName].split('/')
+            for exitUrlOne in exitUrl:
+                print(exitUrlOne)
+                if reUrlCnt == 4:
+                    reUrlCnt += 1
+                    continue
+                else:
+                    reUrlCnt += 1
+                    reUrl = reUrl + exitUrlOne + '/'
+            print("******************************:")
+            print(reUrl)
+            driver.get(f"https://transit.goo.ne.jp{reUrl}exit.html")        # 出口案内ページアクセス
             html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
             soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
-            driver.quit()
 
             # 出口と施設をリストexitInfoへ格納
-            facility_tag = soup.find_all(id='faility').string
-            for sn_tag in stationName_tag:
-                stationName = sn_tag.string
-                stationInfo[stationName] = sn_tag.get('href')
-                print(stationInfo)
+            print(soup)
+            facility_tag = soup.find_all(id='facility')
+            print(facility_tag)
+            break
 
         line_bot_api.reply_message(event.reply_token,TextSendMessage(text="成功"))
 
