@@ -70,7 +70,6 @@ def handle_message(event):
         driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # 駅名検索ページアクセス
         html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
         soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
-        driver.quit()
 
         # 駅名-路線名と駅ページのurlをリストstationInfoへ格納
         stationName_tag = soup.select('ul.stationname > li > a')
