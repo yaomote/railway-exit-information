@@ -9,6 +9,8 @@ def main():
     # 駅情報格納用
     stationInfo = {}    #{'駅名-路線':'ページurl'}
     text = ""
+    reUrl = ""
+    reUrlCnt = 0
 
     # ブラウザのオプションを格納する変数をもらってくる。
     options = Options()
@@ -29,10 +31,29 @@ def main():
         stationName = sn_tag.string
         stationInfo[stationName] = sn_tag.get('href')
 
-    for si_key in stationInfo:
-        text = text + stationInfo[si_key]
+    # 出口案内情報を取得
+    for stationName in stationInfo:
+        # urlの作り直し
+        exitUrl = stationInfo[stationName].split('/')
+        for exitUrlOne in exitUrl:
+            print(exitUrlOne)
+            if reUrlCnt == 4:
+                reUrlCnt += 1
+                continue
+            else:
+                reUrlCnt += 1
+                reUrl = reUrl + exitUrlOne + '/'
+        print("******************************:")
+        print(reUrl)
+        driver.get(f"https://transit.goo.ne.jp{reUrl}exit.html")        # 出口案内ページアクセス
+        html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
+        soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
 
-    print(text)
+        # 出口と施設をリストexitInfoへ格納
+        print(soup)
+        facility_tag = soup.find_all(id='facility')
+        print(facility_tag)
+        break
 
     return
 

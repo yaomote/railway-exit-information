@@ -65,19 +65,32 @@ def handle_message(event):
     text = ""           # test用
 
     if event.message.text == "渋谷駅":
-        driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # ブラウザでアクセスする
+        driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # 駅名検索ページアクセス
         html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
         soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
+        driver.quit()
+
         # 駅名-路線名と駅ページのurlをリストstationInfoへ格納
         stationName_tag = soup.select('ul.stationname > li > a')
         for sn_tag in stationName_tag:
             stationName = sn_tag.string
             stationInfo[stationName] = sn_tag.get('href')
 
-        for si_key in stationInfo:
-            text = text + stationInfo[si_key]
+        # 出口案内情報を取得
+        for stationName in stationInfo:
+            driver.get(f"https://transit.goo.ne.jp{stationInfo[stationName]}exit.html")        # 出口案内ページアクセス
+            html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
+            soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
+            driver.quit()
 
-        line_bot_api.reply_message(event.reply_token,TextSendMessage(text=text))
+            # 出口と施設をリストexitInfoへ格納
+            facility_tag = soup.find_all(id='faility').string
+            for sn_tag in stationName_tag:
+                stationName = sn_tag.string
+                stationInfo[stationName] = sn_tag.get('href')
+                print(stationInfo)
+
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(text="成功"))
 
     else:
         print("**********失敗***********")
