@@ -8,9 +8,6 @@ import time                                                 # scrapingの時間�
 def main():
     # 駅情報格納用
     stationInfo = {}    #{'駅名-路線':'ページurl'}
-    text = ""
-    reUrl = ""
-    reUrlCnt = 0
 
     # ブラウザのオプションを格納する変数をもらってくる。
     options = Options()
@@ -19,7 +16,7 @@ def main():
     # ブラウザを起動
     driver = webdriver.Chrome(chrome_options=options, executable_path='C:\\chromedriver.exe')
     # ブラウザでアクセスする
-    driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name=渋谷駅&input=検索")
+    driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name=新宿駅&input=検索")
     # HTMLを文字コードをUTF-8に変換してから取得します。
     html = driver.page_source.encode('utf-8')
     # htmlをBeautifulSoupで扱う
@@ -33,6 +30,13 @@ def main():
 
     # 出口案内情報を取得
     for stationName in stationInfo:
+        # 変数初期化
+        reUrl = ""
+        reUrlCnt = 0
+        feedpageFlag = False
+        feedpageNum = 0
+        feedCnt = 0
+
         # urlの作り直し
         exitUrl = stationInfo[stationName].split('/')
         for exitUrlOne in exitUrl:
@@ -43,18 +47,46 @@ def main():
             else:
                 reUrlCnt += 1
                 reUrl = reUrl + exitUrlOne + '/'
-        print("******************************:")
-        print(reUrl)
         driver.get(f"https://transit.goo.ne.jp{reUrl}exit.html")        # 出口案内ページアクセス
         html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
         soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
 
-        # 出口と施設をリストexitInfoへ格納
-        print(soup)
-        facility_tag = soup.find_all(id='facility')
-        print(facility_tag)
-        break
+        # 複数ページにまたがるかどうか本処理前にチェック
+        feedpage = soup.find(class_='feedpage')
+        if feedpage == None:
+            feedpageFlag = False
+        else:
+            feedpage = feedpage.find_all('a')
+            feedpageNum = len(feedpage) - 2     #feedpageの数（1ページ目と次への項目を除く）
+            feedpageFlag = True
 
+        # 1ページ目は必ず実行 複数ページにまたがる場合は繰り返し
+        while True:
+            exitCnt = 0
+            # 出口と施設をリストexitInfoへ格納
+            exit_tag = soup.find_all(id='facility')
+            facility_tag = soup.find_all(class_='exit')
+            for et in exit_tag:
+                exitName = et.string
+                facility_total = facility_tag[exitCnt].find_all('li')
+                print(exitName)
+                print('----')
+                for facility_one in facility_total:
+                    facility = facility_one.string
+                    print(facility)
+                print('----')
+                exitCnt += 1
+            if feedpageFlag == False:
+                break
+            else:
+                if feedCnt > feedpageNum:
+                    break
+                else:
+                    driver.get(f"https://transit.goo.ne.jp{reUrl}{2+feedCnt}/exit.html")        # 出口案内ページアクセス
+                    html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
+                    soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
+                    feedCnt += 1
+        break
     return
 
 
