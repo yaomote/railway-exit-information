@@ -26,24 +26,16 @@ handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 def callback():
     # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
-    print("test1********")
-    print(signature)
 
     # get request body as text
     body = request.get_data(as_text=True)
-    print("test6********")
-    print(request)
-    print("test7********")
-    print(body)
     app.logger.info("Request body: " + body)
 
     # handle webhook body
     try:
         handler.handle(body, signature)
-        print("test2********")
     except InvalidSignatureError:
         abort(400)
-        print("test3********")
 
     return 'OK'
 
@@ -86,7 +78,6 @@ def handle_message(event):
             # urlの作り直し
             exitUrl = stationInfo[stationName].split('/')
             for exitUrlOne in exitUrl:
-                print(exitUrlOne)
                 if reUrlCnt == 4:
                     reUrlCnt += 1
                     continue
@@ -115,6 +106,8 @@ def handle_message(event):
                 # 出口と施設をリストexitInfoへ格納
                 exit_tag = soup.find_all(id='facility')
                 facility_tag = soup.find_all(class_='exit')
+                print("test1********")
+                print(facility_tag)
                 for et in exit_tag:
                     exitName = et.string
                     facility_total = facility_tag[exitCnt].find_all('li')
