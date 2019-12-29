@@ -69,6 +69,7 @@ def handle_message(event):
         # 出口案内情報を取得
         for stationName in stationInfo:
             # 変数初期化
+            text = ""
             reUrl = ""
             reUrlCnt = 0
             feedpageFlag = False
@@ -100,7 +101,6 @@ def handle_message(event):
             # 1ページ目は必ず実行 複数ページにまたがる場合は繰り返し
             while True:
                 # 変数初期化
-                text = ""
                 exitCnt = 0
 
                 # 出口と施設をリストexitInfoへ格納
@@ -120,16 +120,16 @@ def handle_message(event):
                 if feedpageFlag == False:
                     break
                 else:
-                    if feedCnt > feedpageNum:
+                    if feedCnt >= feedpageNum:
                         break
                     else:
                         driver.get(f"https://transit.goo.ne.jp{reUrl}{2+feedCnt}/exit.html")        # 出口案内ページアクセス
                         html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
                         soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
                         feedCnt += 1
+                print(text)
             break
 
-        print(text)
         line_bot_api.reply_message(event.reply_token,TextSendMessage(text=text))
 
     else:
