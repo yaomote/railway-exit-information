@@ -136,6 +136,7 @@ def handle_message(event):
                         feedCnt += 1
             break
 
+        print(text)
         line_bot_api.reply_message(event.reply_token,TextSendMessage(text=text))
 
     else:
