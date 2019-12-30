@@ -11,8 +11,6 @@ from selenium import webdriver                              # 動的ページに
 from selenium.webdriver.chrome.options import Options       # webdriverの設定用
 import time                                                 # scrapingの時間制御用
 
-import nlpREI                                               # 自然言語処理
-
 app = Flask(__name__)
 
 # 環境変数取得
@@ -58,8 +56,7 @@ def handle_message(event):
     stationInfo = {}    # {'駅名-路線':'ページurl'}
 
     # 入力テキストチェック
-    nlprei = nlpREI.CnlpREI()
-    result = nlprei.nlp(event.message.text)
+    result = list(event.message.text)
     # 入力値OKの場合
     if result[-1] == '駅' and result.count('駅') == 1:
         driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # 駅名検索ページアクセス
