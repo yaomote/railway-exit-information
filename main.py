@@ -135,13 +135,8 @@ def handle_message(event):
     # 入力値NGの場合
     else:
         line_bot_api.reply_message(event.reply_token,
-            TextSendMessage(text="駅名を確認してください（名前の最後に「駅」がついていることを確認してください）"),
-            TextSendMessage(text="例:渋谷駅")
+            TextSendMessage(text="駅名を確認してください（名前の最後に「駅」がついていることを確認してください）\n例:渋谷駅")
         )
-
-    # CnlpREIクラス デストラクタ
-    del nlprei
-
 
 if __name__ == "__main__":
     # スクレイピング準備
