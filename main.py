@@ -59,8 +59,6 @@ def handle_message(event):
     result = list(event.message.text)
     # 入力値OKの場合
     if result[-1] == '駅' and result.count('駅') == 1:
-        # 処理中です少々お待ちくださいメッセージ
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text="処理中です。\n少々お待ちください。"))
         driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # 駅名検索ページアクセス
         html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
         soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
