@@ -11,6 +11,8 @@ from selenium import webdriver                              # 動的ページに
 from selenium.webdriver.chrome.options import Options       # webdriverの設定用
 import time                                                 # scrapingの時間制御用
 
+import nlpREI                                               # 自然言語処理
+
 app = Flask(__name__)
 
 # 環境変数取得
@@ -55,7 +57,11 @@ def handle_message(event):
     # 駅情報格納用
     stationInfo = {}    # {'駅名-路線':'ページurl'}
 
-    if event.message.text == "渋谷駅":
+    # 入力テキストチェック
+    nlprei = nlpREI.CnlpREI()
+    result = nlprei.nlp(event.message.text)
+    # 入力値OKの場合
+    if result[-1] == '駅' and result.count('駅') == 1:
         driver.get(f"https://transit.goo.ne.jp/station/train/confirm.php?st_name={event.message.text}&input=検索")        # 駅名検索ページアクセス
         html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
         soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
@@ -106,8 +112,6 @@ def handle_message(event):
                 # 出口と施設をリストexitInfoへ格納
                 exit_tag = soup.find_all(id='facility')
                 facility_tag = soup.find_all(class_='exit')
-                print("test1********")
-                print(facility_tag)
                 for et in exit_tag:
                     exitName = et.string
                     facility_total = facility_tag[exitCnt].find_all('li')
@@ -127,16 +131,19 @@ def handle_message(event):
                         html = driver.page_source.encode('utf-8')       # HTMLを文字コードをUTF-8に変換してから取得します。
                         soup = BeautifulSoup(html, "html.parser")       # htmlをBeautifulSoupで扱う
                         feedCnt += 1
-                print(text)
             break
 
-        line_bot_api.reply_message(event.reply_token,TextSendMessage(text=text))
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=text))
 
+    # 入力値NGの場合
     else:
-        print("**********失敗***********")
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="失敗"))
+        line_bot_api.reply_message(event.reply_token,
+            TextSendMessage(text="駅名を確認してください（名前の最後に「駅」がついていることを確認してください）"),
+            TextSendMessage(text="例:渋谷駅")
+        )
+
+    # CnlpREIクラス デストラクタ
+    del nlprei
 
 
 if __name__ == "__main__":

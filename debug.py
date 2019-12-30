@@ -5,9 +5,19 @@ from selenium import webdriver                              # 動的ページに
 from selenium.webdriver.chrome.options import Options       # webdriverの設定用
 import time                                                 # scrapingの時間制御用
 
+import nlpREI                                               # 自然言語処理
+
 def main():
     # 駅情報格納用
     stationInfo = {}    #{'駅名-路線':'ページurl'}
+
+    # 入力テキストチェック
+    message_text = input("\n\n駅名を入力してください：")
+    nlprei = nlpREI.CnlpREI()
+    result = nlprei.nlp(message_text)
+    print("**************************************test")
+    print(result)
+    del nlprei
 
     # ブラウザのオプションを格納する変数をもらってくる。
     options = Options()

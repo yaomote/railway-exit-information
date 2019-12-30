@@ -1,0 +1,12 @@
+Metadata-Version: 2.0
+Name: cabocha-python
+Version: 0.69.1
+Summary: Python wrapper for CaboCha: Japanese Dependency Structure Analyzer
+Home-page: https://github.com/ikegami-yukino/cabocha/tree/master/python
+Author: Yukino Ikegami
+Author-email: yknikgm@gmail.com
+License: BSD or LGPL
+
+cabocha-python
+
+
