@@ -52,7 +52,7 @@ def handle_follow(event):
 # メッセージ
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    # 駅情報格納用
+    # 変数
     stationInfo = {}    # {'駅名-路線':'ページurl'}
 
     # 入力テキストチェック
@@ -130,6 +130,7 @@ def handle_message(event):
                         feedCnt += 1
             break
 
+        driver.quit()
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=text))
 
     # 入力値NGの場合
