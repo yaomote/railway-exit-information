@@ -4,12 +4,9 @@ from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (FollowEvent, MessageEvent, TextMessage, TextSendMessage,)
 import os
 
-import urllib.request, urllib.error                         # urlアクセス
-import requests                                             # urlアクセス
 from bs4 import BeautifulSoup                               # web scraping用
 from selenium import webdriver                              # 動的ページに対するscraping用
 from selenium.webdriver.chrome.options import Options       # webdriverの設定用
-import time                                                 # scrapingの時間制御用
 
 app = Flask(__name__)
 
